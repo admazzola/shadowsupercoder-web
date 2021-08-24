@@ -19,10 +19,9 @@
      <div class="py-16 w-container">
         
        <div class="  px-2 ">
-          <div class="text-lg font-bold mb-4"> Give to the Guild  </div>
+          <div class="text-lg font-bold mb-4"> Contract Interaction  </div>
 
-          <div class="text-sm   mb-8"> Add 0xBTC to the Guild pool, distributing it to members equally  </div>
-           
+            
           <div  class=" " v-if="!connectedToWeb3">
               <NotConnectedToWeb3 />
           </div>
@@ -31,45 +30,54 @@
  
    
  
-           <div class="mb-4 inline-block ">
-
-           
-
-
-             <div class="flex flex-row">
-              <label   class="block text-md font-medium font-bold text-gray-800  ">Give Amount</label>
-                  <div class="flex-grow"></div>
-                <label   class="block text-xs font-xs text-blue-500  ">Balance:   {{tokenBalanceFormatted}}</label>
-
-            </div>
+           <div class="mb-4   ">
+ 
+                <div class="flex flex-row"> 
+                <label   class="block text-md font-medium font-bold text-gray-800  ">Contract Address</label> 
+                </div>
+          
               <div class="flex flex-row">
-              <div class="w-f ">
-                    <input type="number"   v-model="formInputs.currencyAmountFormatted"  class="text-gray-900 border-2 border-black font-bold px-4 text-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full py-4 pl-7 pr-12   border-gray-300 rounded-md" placeholder="0.00">
+                 <div class="w-f ">
+                    <input type="text"   v-model="formInputs.contractAddress"  class="text-gray-900 border-2 border-black font-bold px-4 text-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full py-4 pl-7 pr-12   border-gray-300 rounded-md" placeholder="0x..">
                 </div> 
                  
               </div>
+              
+           
+            </div> 
 
 
-                <div class="flex flex-row">
-              <div class="bg-blue-200 p-4 w-full mt-4 ">
-                    You will receive no guild shares for this contribution.
+
+
+            <div class="mb-4   ">
+ 
+                <div class="flex flex-row"> 
+                <label   class="block text-md font-medium font-bold text-gray-800  ">Raw Input Data</label> 
+                </div>
+          
+              <div class="flex flex-row">
+                 <div class="w-f ">
+                    <input type="text"   v-model="formInputs.rawInputData"  class="text-gray-900 border-2 border-black font-bold px-4 text-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full py-4 pl-7 pr-12   border-gray-300 rounded-md" placeholder="0x..">
                 </div> 
                  
               </div>
+              
            
-           
-            </div>
-
- 
- 
+            </div> 
 
           </div>
+
+
+
+
+
+
 
            <div class="py-4" v-if=" connectedToWeb3 && !submitComplete">
               
  
                  <div class="  p-4">
-                     <div @click="giveClicked" class="select-none bg-blue-700 p-2 inline-block rounded hover:bg-blue-900 border-gray-800 border-2 cursor-pointer text-white" style=" text-shadow: 1px 1px #222;"> Give </div>
+                     <div @click="submitClicked" class="select-none bg-blue-700 p-2 inline-block rounded hover:bg-blue-900 border-gray-800 border-2 cursor-pointer text-white" style=" text-shadow: 1px 1px #222;"> Submit </div>
                 </div> 
 
           </div>
@@ -113,11 +121,10 @@ const GuildContractABI = require('../contracts/MinersGuild.json')
 
 import FrontendHelper from '../js/frontend-helper.js'
 
-
-var balanceInterval
+ 
 
 export default {
-  name: 'Stake',
+  name: 'ContractInteraction',
   props: [],
   components: {Navbar, Footer, TabsBar, GenericTable, GenericDropdown,NotConnectedToWeb3},
   data() {
@@ -126,7 +133,7 @@ export default {
   
       formInputs:{},
 
-      tokenBalanceFormatted: null,
+      
        
       connectedToWeb3: false ,
       submitComplete:false
@@ -160,19 +167,17 @@ export default {
   },
    mounted: async function () {
 
-    
      
-    balanceInterval = setInterval(this.fetchBalance,8000)
     
   }, 
   beforeDestroy(){
-    clearInterval(balanceInterval)
+    
   },
   methods: {
 
  
-    async giveClicked(){
-      console.log('start give ')
+    async submitClicked(){
+      console.log('start submit ')
 
 
       let accountAddress = this.web3Plug.getActiveAccountAddress()
@@ -187,26 +192,13 @@ export default {
  
       let tokenContract = this.web3Plug.getTokenContract( tokenContractAddress );
 
-    
+
+      
 
       let response = await tokenContract.methods.transfer( guildContractAddress, currencyAmountRaw ).send({from:  accountAddress })
     },
 
-
-    async fetchBalance(){
-       let chainId = this.web3Plug.getActiveNetId()
-      let accountAddress = this.web3Plug.getActiveAccountAddress()
-
-     
-      let tokenContractAddress = this.web3Plug.getContractDataForNetworkID(chainId)['0xbitcoin'].address
-
-
-      let tokenBalanceRaw = await  this.web3Plug.getTokenBalance(tokenContractAddress, accountAddress)
-
-      console.log('tokenBalanceRaw', tokenBalanceRaw )
-
-      this.tokenBalanceFormatted = parseFloat(   MathHelper.rawAmountToFormatted(tokenBalanceRaw  , 8  ) )
-    }
+ 
           
   }
 }

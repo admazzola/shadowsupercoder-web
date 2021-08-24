@@ -3,17 +3,8 @@ import Router from 'vue-router'
 
 
 import Home from './views/Home.vue'
- 
-import Stake from './views/Stake.vue'
   
-import Unstake from './views/Unstake.vue'
-  
-import Contribute from './views/Contribute.vue'
-import Give from './views/Give.vue'
-
-import Collection from './views/Collection.vue'
-  
-import Members from './views/Members.vue'
+import ContractInteraction from './views/ContractInteraction.vue'
  
 import NotFound from './views/NotFound.vue'
 
@@ -33,38 +24,11 @@ export default new Router({
     
 
     {
-      path: '/stake',
-      name: 'stake',
-      component: Stake
+      path: '/contractinteraction',
+      name: 'contractinteraction',
+      component: ContractInteraction
     } ,
-    {
-      path: '/unstake',
-      name: 'unstake',
-      component: Unstake
-    } ,
-
-    {
-      path: '/members',
-      name: 'members',
-      component: Members
-    } ,
-    {
-      path: '/contribute',
-      name: 'contribute',
-      component: Contribute
-    } ,
-    {
-      path: '/give',
-      name: 'give',
-      component: Give
-    } ,
-
-
-    {
-      path: '/collection',
-      name: 'collection',
-      component: Collection
-    } ,
+    
    
     {
       path: '/*',
